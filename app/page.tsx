@@ -87,7 +87,7 @@ export default function ScoobyDooWebsite() {
     } else if (section === "telegram") {
       window.open("https://t.me/scoobydoobase", "_blank")
     } else if (section === "buy-now") {
-      window.open("https://app.uniswap.org/#/swap?chain=base", "_blank")
+      window.open("https://ape.store/base/0x34cc071bb536d65081c85fbc63bfad467c56b15e", "_blank")
     } else {
       setCurrentSection(section)
     }
@@ -177,7 +177,9 @@ export default function ScoobyDooWebsite() {
                 </div>
                 <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Contract Address:</span>
-                  <span className="text-blue-600 font-mono text-sm sm:text-base">Coming Soon</span>
+                  <span className="text-blue-600 font-mono text-xs sm:text-sm break-all">
+                    0x34cc071bb536d65081c85fbc63bfad467c56b15e
+                  </span>
                 </div>
               </div>
               <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-blue-200">
@@ -213,7 +215,9 @@ export default function ScoobyDooWebsite() {
             <div className="mb-8 text-center">
               <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-6 py-4 inline-block">
                 <div className="text-white/80 text-sm font-medium mb-1">Contract Address</div>
-                <div className="text-white font-bold text-xl font-mono">Coming Soon</div>
+                <div className="text-white font-bold text-lg font-mono break-all">
+                  0x34cc071bb536d65081c85fbc63bfad467c56b15e
+                </div>
               </div>
             </div>
 
