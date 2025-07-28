@@ -1,7 +1,9 @@
 "use client"
 
+import type React from "react"
+
 import { useState, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 
@@ -63,6 +65,9 @@ const characters = [
 export default function ScoobyDooWebsite() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [currentSection, setCurrentSection] = useState("homepage")
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [touchStart, setTouchStart] = useState<number | null>(null)
+  const [touchEnd, setTouchEnd] = useState<number | null>(null)
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -86,6 +91,32 @@ export default function ScoobyDooWebsite() {
     } else {
       setCurrentSection(section)
     }
+    setIsMobileMenuOpen(false)
+  }
+
+  // Touch handlers for mobile swipe
+  const minSwipeDistance = 50
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null)
+    setTouchStart(e.targetTouches[0].clientX)
+  }
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX)
+  }
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return
+    const distance = touchStart - touchEnd
+    const isLeftSwipe = distance > minSwipeDistance
+    const isRightSwipe = distance < -minSwipeDistance
+
+    if (isLeftSwipe) {
+      nextSlide()
+    } else if (isRightSwipe) {
+      prevSlide()
+    }
   }
 
   useEffect(() => {
@@ -97,13 +128,15 @@ export default function ScoobyDooWebsite() {
     switch (currentSection) {
       case "characters":
         return (
-          <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-8">
-            <h2 className="text-4xl font-bold text-blue-900 mb-8 text-center">Meet the Characters</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-4 sm:p-8">
+            <h2 className="text-2xl sm:text-4xl font-bold text-blue-900 mb-6 sm:mb-8 text-center">
+              Meet the Characters
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {characters.map((character, index) => (
-                <div key={index} className="bg-blue-50 p-6 rounded-lg border-2 border-blue-200">
-                  <h3 className="text-xl font-bold text-blue-800 mb-2">{character.name}</h3>
-                  <p className="text-blue-600">{character.description}</p>
+                <div key={index} className="bg-blue-50 p-4 sm:p-6 rounded-lg border-2 border-blue-200">
+                  <h3 className="text-lg sm:text-xl font-bold text-blue-800 mb-2">{character.name}</h3>
+                  <p className="text-sm sm:text-base text-blue-600">{character.description}</p>
                 </div>
               ))}
             </div>
@@ -111,44 +144,46 @@ export default function ScoobyDooWebsite() {
         )
       case "chart":
         return (
-          <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-8">
-            <h2 className="text-4xl font-bold text-blue-900 mb-8 text-center">$SCOOBY Token Chart</h2>
-            <div className="bg-blue-50 p-8 rounded-lg border-2 border-blue-200 text-center">
-              <p className="text-2xl text-blue-800 mb-4">Token Information</p>
-              <div className="space-y-4">
-                <div className="flex justify-between">
+          <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-2xl p-4 sm:p-8">
+            <h2 className="text-2xl sm:text-4xl font-bold text-blue-900 mb-6 sm:mb-8 text-center">
+              $SCOOBY Token Chart
+            </h2>
+            <div className="bg-blue-50 p-4 sm:p-8 rounded-lg border-2 border-blue-200">
+              <p className="text-xl sm:text-2xl text-blue-800 mb-4 text-center">Token Information</p>
+              <div className="space-y-3 sm:space-y-4">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Project:</span>
                   <span className="text-blue-600">Scooby-Doo</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Symbol:</span>
                   <span className="text-blue-600">$SCOOBY</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Network:</span>
                   <span className="text-blue-600">Base Network</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Total Supply:</span>
                   <span className="text-blue-600">1,000,000,000</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Chain ID:</span>
                   <span className="text-blue-600">8453</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
                   <span className="font-bold text-blue-700">Built on:</span>
                   <span className="text-blue-600">Coinbase's Base L2</span>
                 </div>
               </div>
-              <div className="mt-8 pt-6 border-t border-blue-200">
-                <h3 className="text-xl font-bold text-blue-800 mb-4">Official Links</h3>
-                <div className="flex justify-center space-x-4">
+              <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-blue-200">
+                <h3 className="text-lg sm:text-xl font-bold text-blue-800 mb-4 text-center">Official Links</h3>
+                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                   <a
                     href="https://t.me/scoobydoobase"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2 min-h-[48px]"
                   >
                     <Image src="/icons/telegram-icon.webp" alt="Telegram" width={24} height={24} className="w-6 h-6" />
                     <span>Telegram</span>
@@ -157,7 +192,7 @@ export default function ScoobyDooWebsite() {
                     href="https://x.com/ScoobyDoo_Base"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2"
+                    className="bg-black hover:bg-gray-800 text-white px-4 sm:px-6 py-3 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2 min-h-[48px]"
                   >
                     <Image src="/icons/twitter-icon.png" alt="Twitter/X" width={24} height={24} className="w-6 h-6" />
                     <span>Twitter/X</span>
@@ -172,27 +207,32 @@ export default function ScoobyDooWebsite() {
           <div className="w-full max-w-6xl mx-auto">
             {/* Carousel Container */}
             <div className="relative">
-              {/* Navigation Arrows */}
+              {/* Navigation Arrows - Hidden on mobile, shown on desktop */}
               <Button
                 variant="ghost"
                 size="lg"
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16"
+                className="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 hidden sm:flex items-center justify-center"
               >
-                <ChevronLeft className="w-8 h-8" />
+                <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
               </Button>
 
               <Button
                 variant="ghost"
                 size="lg"
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-16 h-16"
+                className="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 z-20 bg-blue-600 hover:bg-blue-700 text-white rounded-full w-12 h-12 sm:w-16 sm:h-16 hidden sm:flex items-center justify-center"
               >
-                <ChevronRight className="w-8 h-8" />
+                <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
               </Button>
 
-              {/* Slide Content */}
-              <div className="relative h-[600px] md:h-[700px] overflow-hidden rounded-lg bg-white shadow-2xl">
+              {/* Slide Content with Touch Support */}
+              <div
+                className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden rounded-lg bg-white shadow-2xl"
+                onTouchStart={onTouchStart}
+                onTouchMove={onTouchMove}
+                onTouchEnd={onTouchEnd}
+              >
                 {slides.map((slide, index) => (
                   <div
                     key={slide.id}
@@ -214,21 +254,21 @@ export default function ScoobyDooWebsite() {
                             className="object-contain opacity-30"
                           />
                         </div>
-                        <div className="relative z-10 text-center max-w-3xl px-8">
-                          <h2 className="text-4xl md:text-6xl font-bold text-white mb-8">
+                        <div className="relative z-10 text-center max-w-3xl px-4 sm:px-8">
+                          <h2 className="text-2xl sm:text-4xl md:text-6xl font-bold text-white mb-4 sm:mb-8">
                             WELCOME TO <span className="text-blue-300">SCOOBY-DOO</span>
                           </h2>
-                          <p className="text-xl md:text-2xl text-white leading-relaxed mb-8">
+                          <p className="text-sm sm:text-xl md:text-2xl text-white leading-relaxed mb-6 sm:mb-8">
                             WHERE MYSTERY MEETS MEME MAGIC ON THE BASE BLOCKCHAIN! INSPIRED BY THE BELOVED ANIMATED
                             SERIES, OUR TOKEN EMBODIES THE SPIRIT OF FRIENDSHIP, ADVENTURE, AND FUN, JUST LIKE SCOOBY
                             AND THE GANG.
                           </p>
-                          <div className="flex justify-center space-x-4">
+                          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
                             <a
                               href="https://t.me/scoobydoobase"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-bold transition-colors flex items-center space-x-2"
+                              className="bg-blue-500 hover:bg-blue-600 text-white px-4 sm:px-6 py-3 rounded-lg font-bold transition-colors flex items-center justify-center space-x-2 min-h-[48px]"
                             >
                               <Image
                                 src="/icons/telegram-icon.webp"
@@ -243,7 +283,7 @@ export default function ScoobyDooWebsite() {
                               href="https://x.com/ScoobyDoo_Base"
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-bold transition-colors flex items-center space-x-2"
+                              className="bg-black hover:bg-gray-800 text-white px-4 sm:px-6 py-3 rounded-lg font-bold transition-colors flex items-center justify-center space-x-2 min-h-[48px]"
                             >
                               <Image
                                 src="/icons/twitter-icon.png"
@@ -258,7 +298,7 @@ export default function ScoobyDooWebsite() {
                         </div>
                       </div>
                     ) : (
-                      <div className="h-full relative bg-white flex items-center justify-center p-8">
+                      <div className="h-full relative bg-white flex items-center justify-center p-4 sm:p-8">
                         <div className="w-full h-full relative">
                           <Image
                             src={slide.image || "/placeholder.svg"}
@@ -269,10 +309,12 @@ export default function ScoobyDooWebsite() {
                           />
                         </div>
                         {/* Title Overlay - positioned at bottom */}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-900/95 to-transparent p-6">
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-blue-900/95 to-transparent p-3 sm:p-6">
                           <div className="max-w-4xl mx-auto">
-                            <h3 className="font-bold text-2xl md:text-3xl text-white mb-2">{slide.title}</h3>
-                            <p className="text-blue-100 text-lg">{slide.description}</p>
+                            <h3 className="font-bold text-lg sm:text-2xl md:text-3xl text-white mb-1 sm:mb-2">
+                              {slide.title}
+                            </h3>
+                            <p className="text-blue-100 text-sm sm:text-lg">{slide.description}</p>
                           </div>
                         </div>
                       </div>
@@ -282,16 +324,21 @@ export default function ScoobyDooWebsite() {
               </div>
 
               {/* Slide Indicators */}
-              <div className="flex justify-center mt-6 space-x-2">
+              <div className="flex justify-center mt-4 sm:mt-6 space-x-2">
                 {slides.map((_, index) => (
                   <button
                     key={index}
                     onClick={() => goToSlide(index)}
-                    className={`w-3 h-3 rounded-full transition-colors ${
+                    className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-colors ${
                       index === currentSlide ? "bg-white" : "bg-white/50"
                     }`}
                   />
                 ))}
+              </div>
+
+              {/* Mobile Navigation Hint */}
+              <div className="sm:hidden text-center mt-4">
+                <p className="text-white/70 text-sm">👈 Swipe to navigate 👉</p>
               </div>
             </div>
           </div>
@@ -310,14 +357,14 @@ export default function ScoobyDooWebsite() {
       />
 
       {/* Diagonal Header Background */}
-      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-r from-white via-blue-600 to-black transform -skew-y-2 origin-top-left scale-110" />
+      <div className="absolute top-0 left-0 w-full h-24 sm:h-32 bg-gradient-to-r from-white via-blue-600 to-black transform -skew-y-2 origin-top-left scale-110" />
 
       {/* Header */}
-      <header className="relative z-10 flex items-center justify-between p-4">
+      <header className="relative z-10 flex items-center justify-between p-3 sm:p-4">
         {/* Logo */}
         <div className="flex items-center">
           <div className="relative cursor-pointer" onClick={() => handleNavigation("homepage")}>
-            <div className="w-32 h-32 rounded-full shadow-lg overflow-hidden border-4 border-white">
+            <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full shadow-lg overflow-hidden border-2 sm:border-4 border-white">
               <Image
                 src="/images/scooby-coin-logo.png"
                 alt="Scooby-Doo Logo"
@@ -330,8 +377,8 @@ export default function ScoobyDooWebsite() {
           </div>
         </div>
 
-        {/* Navigation */}
-        <nav className="flex items-center space-x-6">
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-6">
           <button
             onClick={() => handleNavigation("homepage")}
             className={`text-white font-bold text-lg hover:text-blue-300 transition-colors underline ${
@@ -377,13 +424,75 @@ export default function ScoobyDooWebsite() {
             Buy Now
           </button>
         </nav>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden text-white p-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition-colors"
+        >
+          {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
       </header>
 
-      {/* Main Content */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-8 py-8">{renderContent()}</main>
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-blue-900/95 backdrop-blur-sm">
+          <div className="flex flex-col items-center justify-center h-full space-y-8">
+            <button
+              onClick={() => handleNavigation("homepage")}
+              className={`text-white font-bold text-2xl hover:text-blue-300 transition-colors ${
+                currentSection === "homepage" ? "text-blue-300" : ""
+              }`}
+            >
+              Homepage
+            </button>
+            <button
+              onClick={() => handleNavigation("characters")}
+              className={`text-white font-bold text-2xl hover:text-blue-300 transition-colors ${
+                currentSection === "characters" ? "text-blue-300" : ""
+              }`}
+            >
+              Characters
+            </button>
+            <button
+              onClick={() => handleNavigation("chart")}
+              className={`text-white font-bold text-2xl hover:text-blue-300 transition-colors ${
+                currentSection === "chart" ? "text-blue-300" : ""
+              }`}
+            >
+              Chart
+            </button>
+            <button
+              onClick={() => handleNavigation("twitter")}
+              className="text-white font-bold text-2xl hover:text-blue-300 transition-colors flex items-center space-x-2"
+            >
+              <Image src="/icons/twitter-icon.png" alt="Twitter" width={24} height={24} className="w-6 h-6" />
+              <span>Twitter</span>
+            </button>
+            <button
+              onClick={() => handleNavigation("telegram")}
+              className="text-white font-bold text-2xl hover:text-blue-300 transition-colors flex items-center space-x-2"
+            >
+              <Image src="/icons/telegram-icon.webp" alt="Telegram" width={24} height={24} className="w-6 h-6" />
+              <span>Telegram</span>
+            </button>
+            <button
+              onClick={() => handleNavigation("buy-now")}
+              className="text-white font-bold text-2xl hover:text-blue-300 transition-colors"
+            >
+              Buy Now
+            </button>
+          </div>
+        </div>
+      )}
 
-      {/* Windows Activation Watermark (for authenticity) */}
-      <div className="absolute bottom-4 right-4 text-white/30 text-xs">
+      {/* Main Content */}
+      <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-8 py-4 sm:py-8">
+        {renderContent()}
+      </main>
+
+      {/* Windows Activation Watermark (for authenticity) - Hidden on mobile */}
+      <div className="hidden sm:block absolute bottom-4 right-4 text-white/30 text-xs">
         <div>Activate Windows</div>
         <div>Go to Settings to activate Windows</div>
       </div>
