@@ -175,6 +175,10 @@ export default function ScoobyDooWebsite() {
                   <span className="font-bold text-blue-700">Built on:</span>
                   <span className="text-blue-600">Coinbase's Base L2</span>
                 </div>
+                <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0">
+                  <span className="font-bold text-blue-700">Contract Address:</span>
+                  <span className="text-blue-600 font-mono text-sm sm:text-base">Coming Soon</span>
+                </div>
               </div>
               <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-blue-200">
                 <h3 className="text-lg sm:text-xl font-bold text-blue-800 mb-4 text-center">Official Links</h3>
@@ -205,6 +209,14 @@ export default function ScoobyDooWebsite() {
       default:
         return (
           <div className="w-full max-w-6xl mx-auto">
+            {/* Contract Address Section */}
+            <div className="mb-8 text-center">
+              <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg px-6 py-4 inline-block">
+                <div className="text-white/80 text-sm font-medium mb-1">Contract Address</div>
+                <div className="text-white font-bold text-xl font-mono">Coming Soon</div>
+              </div>
+            </div>
+
             {/* Carousel Container */}
             <div className="relative">
               {/* Navigation Arrows - Hidden on mobile, shown on desktop */}
@@ -403,6 +415,7 @@ export default function ScoobyDooWebsite() {
           >
             Chart
           </button>
+
           <button
             onClick={() => handleNavigation("twitter")}
             className="text-white font-bold text-lg hover:text-blue-300 transition-colors underline flex items-center space-x-1"
@@ -462,6 +475,7 @@ export default function ScoobyDooWebsite() {
             >
               Chart
             </button>
+
             <button
               onClick={() => handleNavigation("twitter")}
               className="text-white font-bold text-2xl hover:text-blue-300 transition-colors flex items-center space-x-2"
