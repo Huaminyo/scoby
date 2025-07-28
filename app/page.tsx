@@ -508,12 +508,6 @@ export default function ScoobyDooWebsite() {
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 sm:px-8 py-4 sm:py-8">
         {renderContent()}
       </main>
-
-      {/* Windows Activation Watermark (for authenticity) - Hidden on mobile */}
-      <div className="hidden sm:block absolute bottom-4 right-4 text-white/30 text-xs">
-        <div>Activate Windows</div>
-        <div>Go to Settings to activate Windows</div>
-      </div>
     </div>
   )
 }
